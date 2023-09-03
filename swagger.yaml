@@ -1,0 +1,514 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "Subsify API"
+  description: "This is a simple Subsify api application where anyone can to any campaign to get regular updates. Admin can add new campaign and manage them."
+  contact:
+    name: Newsletter
+    url: https://subsify.com
+    email: support@subsify.com
+servers:
+  - description: Dev
+    url: "http://localhost:4000/api/v1"
+tags:
+  - name: Campaign
+    description: Campaign endpoints
+  - name: Subscription
+    description: Subscription endpoints
+  - name: Auth
+    description: Auth endpoints
+paths:
+  "/auth/login":
+    post:
+      description: Login as admin
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@example.com
+                password:
+                  type: string
+                  format: password
+                  example: PassWord123
+              required: [email, password]
+      responses:
+        "200":
+          description: Signin successul
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Signin successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/subscribe":
+    post:
+      operationId: subscribePost
+      tags: [Subscription]
+      description: Subscribe new user
+      requestBody:
+        description: To subscribe user must need to provide valid email
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@mail.com
+              required: [email]
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: "Subscribed successfully"
+                  data:
+                    $ref: "#/components/schemas/Campaign"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/unsubscribe":
+    post:
+      operationId: unsubscribePost
+      tags: [Subscription]
+      description: Unsubscribe user
+      requestBody:
+        description: To unsubscribe user must need to provide valid email
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@mail.com
+              required: [email]
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: "Unsubscribed successfully"
+                  data:
+                    $ref: "#/components/schemas/Campaign"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/campaigns":
+    get:
+      tags: [Campaign]
+      description: Retrive all campaigns
+      parameters:
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: Return a list of campaigns
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Campaign"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/campaigns?limit=10&offset=0"
+                      next:
+                        type: string
+                        format: url
+                        example: "/campaigns?limit=10&offset=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/campaigns?limit=10&offset=0"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+    post:
+      operationId: createPost
+      security:
+        - bearerAuth: []
+      tags: [Campaign]
+      description: Create a new campaign
+      requestBody:
+        description: To create a new campaign user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: First article
+                description:
+                  type: string
+                  format: text
+                  example: Body of the first article
+                isActive:
+                  type: boolean
+                  example: true
+              required: [title, description]
+      responses:
+        "201":
+          description: Successfully created a new campaign
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: "Article created successfully"
+                  data:
+                    $ref: "#/components/schemas/Campaign"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/campaigns/1"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/campaigns/{id}":
+    get:
+      tags: [Campaign]
+      description: Fetch a single campaign
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "200":
+          description: "Single Article view"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Campaign"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/campaigns/1"
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Campaign]
+      description: Partially update a campaign
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                title:
+                  type: string
+                  example: Lorem Ipsum
+                description:
+                  type: string
+                  format: text
+                  example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                isActive:
+                  type: boolean
+                  example: true
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Campaign]
+      description: Delete a campaign by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Campaign deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Campaign:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            title:
+              type: string
+              example: Lorem Ipsum
+            description:
+              type: string
+              format: text
+              example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            isActive:
+              type: boolean
+              example: true
+          required: [id, title, description, isActive]
+        - $ref: "#/components/schemas/Timestamp"
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          example: 60
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        offset:
+          type: integer
+          format: int32
+          example: 2
+      required:
+        - count
+        - limit
+        - offset
+  responses:
+    "500":
+      description: "Internal Server Error"
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later
+    "400":
+      description: "Bad Request"
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+    "401":
+      description: Unauthorized
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You don't have the right permissions
+    "404":
+      description: Resource Not Found
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
+  parameters:
+    limitParam:
+      in: query
+      name: limit
+      description: maximum items to be returned
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    offsetParam:
+      in: query
+      name: offset
+      description: items to skip
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 0
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: type of sort (asc or dsc)
+      schema:
+        type: string
+        enum: [asc, dsc]
+        example: dsc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: Sort key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: Search term
+      schema:
+        type: string
+        example: title
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      description: Campaign ID
+      schema:
+        type: string
+        example: "64d268cdeef8c84bb18912db"
