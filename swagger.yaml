@@ -9,7 +9,7 @@ info:
     email: support@subsify.com
 servers:
   - description: Dev
-    url: "http://localhost:4000/api/v1"
+    url: "http://localhost:8000/api/v1"
 tags:
   - name: Campaign
     description: Campaign endpoints
@@ -168,8 +168,8 @@ paths:
                       allOf:
                         - $ref: "#/components/schemas/Campaign"
                         - $ref: "#/components/schemas/Timestamp"
-                  pagination:
-                    $ref: "#/components/schemas/Pagination"
+                  Meta:
+                    $ref: "#/components/schemas/Meta"
                   links:
                     type: object
                     properties:
@@ -350,7 +350,6 @@ components:
               example: Lorem Ipsum
             description:
               type: string
-              format: text
               example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
             isActive:
               type: boolean
@@ -367,7 +366,7 @@ components:
           type: string
           format: date-time
       required: [createdAt, updatedAt]
-    Pagination:
+    Meta:
       type: object
       properties:
         count:

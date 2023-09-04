@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import mongoose from "mongoose";
+import { ApiError } from "../utils/error";
 
 interface CustomError {
 	code: number;
@@ -29,6 +30,9 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 		customError.code = 400;
 		customError.error = "Bad Request";
 		customError.message = "Invalid ObjectId";
+	} else if (err instanceof ApiError) {
+		customError.code = err.statusCode;
+		customError.error = err.message;
 	} else {
 		customError.message = err.message;
 	}
