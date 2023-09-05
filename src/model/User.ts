@@ -1,7 +1,15 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-// Define the User schema
+export type IUser = {
+	email: string;
+	password: string;
+};
+
+export type IUserMethods = object;
+
+export type UserModel = Model<IUser, object, IUserMethods>;
+
 const userSchema = new Schema({
 	email: {
 		type: String,
@@ -18,7 +26,7 @@ const userSchema = new Schema({
 });
 
 // Add a pre-save middleware to hash the password before saving to the database
-userSchema.pre<UserDocument>("save", async function (next) {
+userSchema.pre("save", async function (next) {
 	if (!this.isModified("password")) {
 		return next();
 	}
@@ -35,14 +43,7 @@ userSchema.methods.comparePassword = async function (
 	return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Define the User document interface
-interface UserDocument extends Document {
-	email: string;
-	password: string;
-	comparePassword(candidatePassword: string): Promise<boolean>;
-}
-
 // Create the User model
-const User = mongoose.model<UserDocument>("User", userSchema);
+const User = mongoose.model<IUser, UserModel>("User", userSchema);
 
 export default User;

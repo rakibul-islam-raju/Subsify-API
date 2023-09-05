@@ -1,7 +1,17 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
-// Define the Campaign schema
-const campaignSchema = new Schema(
+export type ICampaign = {
+	id?: string;
+	title: string;
+	description: string;
+	isActive: boolean;
+};
+
+export type ICampaignMethods = object;
+
+export type CampaignModel = Model<ICampaign, object, ICampaignMethods>;
+
+const campaignSchema = new Schema<ICampaign, CampaignModel>(
 	{
 		title: {
 			type: String,
@@ -22,19 +32,18 @@ const campaignSchema = new Schema(
 		timestamps: true,
 		toJSON: {
 			virtuals: true,
+			transform: (doc, ret) => {
+				ret.id = doc._id;
+				delete ret._id;
+				delete ret.__v;
+			},
 		},
 	}
 );
 
-// Define the Campaign document interface
-interface CampaignDocument extends Document {
-	title: string;
-	description: string;
-	isActive: boolean;
-	timestamp: Date;
-}
-
-// Create the Campaign model
-const Campaign = mongoose.model<CampaignDocument>("Campaign", campaignSchema);
+const Campaign = mongoose.model<ICampaign, CampaignModel>(
+	"Campaign",
+	campaignSchema
+);
 
 export default Campaign;
