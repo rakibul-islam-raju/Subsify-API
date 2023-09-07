@@ -7,7 +7,9 @@ export type IUser = {
 	password: string;
 };
 
-export type IUserMethods = object;
+export type IUserMethods = {
+	comparePassword(candidatePassword: string): Promise<boolean>;
+};
 
 export type UserModel = Model<IUser, object, IUserMethods>;
 

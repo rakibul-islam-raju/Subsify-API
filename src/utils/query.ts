@@ -88,19 +88,10 @@ export const getTransformedItems = <T>({
 	path = "/",
 }: TransformedItemsProps<T>) => {
 	if (items?.length && items?.length > 0) {
-		console.log("items=>", items);
-
 		const updatedItems: T[] = [];
 		items.forEach((item: T) => {
 			updatedItems.push({ ...item, link: `${path}/${(item as any).id}` });
 		});
-
-		// const updatedItems = items.map((item) => {
-		// 	const result: Partial<T> = {};
-		// 	(result as any).link = `${path}/${(item as any).id}`;
-		// 	return result as Partial<T> & { link: string };
-		// });
-		console.log("items 222222222 =>", updatedItems);
 
 		return updatedItems;
 	}

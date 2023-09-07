@@ -1,6 +1,8 @@
 const saltRounds = 10;
-const jwtSecret = "secret321//";
-const JWT_EXPIRES_IN = "1d";
+const jwtAccessSecret = "secret321//";
+const jwtAccessExpiresIn = "1d";
+const jwtRefreshSecret = "secret789//";
+const jwtRefreshExpiresIn = "7d";
 
 const totalItems = 0;
 const limit = 10;
@@ -11,8 +13,10 @@ const search = "";
 
 export default {
 	saltRounds,
-	jwtSecret,
-	JWT_EXPIRES_IN,
+	jwtAccessSecret,
+	jwtRefreshSecret,
+	jwtAccessExpiresIn,
+	jwtRefreshExpiresIn,
 	totalItems,
 	limit,
 	offset,

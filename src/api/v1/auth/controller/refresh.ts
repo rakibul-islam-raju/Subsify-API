@@ -4,15 +4,14 @@ import { catchAsync } from "../../../../utils/catchAsync";
 import authService from "../../../../lib/auth";
 import { sendResponse } from "../../../../utils/sendResponse";
 
-export const login = catchAsync(
+export const refresh = catchAsync(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { email, password } = req.body;
+		const { refresh } = req.body;
 
-		const tokens = await authService.login(email, password);
+		const tokens = await authService.refresh(refresh);
 
 		const response = {
 			code: httpStatus.OK,
-			message: "Login successful",
 			data: tokens,
 			links: {
 				self: req.url,

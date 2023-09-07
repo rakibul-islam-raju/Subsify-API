@@ -1,13 +1,13 @@
-import User from "../../model/User";
+import User, { IUser } from "../../model/User";
 
 const findUserByEmail = async (email: string) => {
 	const user = await User.findOne({ email });
 	return user ? user : false;
 };
 
-const userExist = async (email: string) => {
+const userExist = async (email: string): Promise<IUser | null | false> => {
 	const user = await findUserByEmail(email);
-	return user ? true : false;
+	return user ? user : false;
 };
 
 const createUser = async (email: string, password: string) => {
