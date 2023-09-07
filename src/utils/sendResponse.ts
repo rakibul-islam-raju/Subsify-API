@@ -9,7 +9,7 @@ type IApiResponse<T> = {
 		offset: number;
 		count: number;
 	};
-	links: {
+	links?: {
 		self: string;
 		prev?: string;
 		next?: string;

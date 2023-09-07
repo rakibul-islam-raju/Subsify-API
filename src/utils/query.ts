@@ -63,7 +63,7 @@ const getHATEOASForAllItems = ({
 	limit = 1,
 }: HATEOASForAllItemsProps) => {
 	const links: ILinks = {
-		self: url,
+		self: `${path}?${generateQueryString({ ...query })}`,
 	};
 
 	if (hasNext) {

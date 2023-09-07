@@ -4,7 +4,6 @@ import { catchAsync } from "../../../../utils/catchAsync";
 import { pickQueryParams } from "../../../../utils/pickQueryParams";
 import campaignService from "../../../../lib/campaign";
 import { sendResponse } from "../../../../utils/sendResponse";
-import { ICampaign } from "../../../../model/Campaign";
 import query from "../../../../utils/query";
 
 export const findAllItems: RequestHandler = catchAsync(

@@ -1,14 +1,12 @@
 import { IPagination } from "../../types";
-import config from "../../config";
 import Campaign, { ICampaign } from "../../model/Campaign";
 import { ApiError } from "../../utils/error";
 import { pagination } from "../../utils/pagination";
+import { ObjectId } from "mongoose";
 
 const findAll = async (
 	paginationOptions: Partial<IPagination>
 ): Promise<ICampaign[] | null> => {
-	console.log("paginationOptions =>", paginationOptions);
-
 	const { offset, limit, sortBy, sortType, search } =
 		pagination.generatePaginationAndSortFields(paginationOptions);
 	const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
@@ -32,11 +30,11 @@ const count = (search?: string): Promise<number | null> => {
 	return Campaign.count(filter);
 };
 
-const create = async ({
-	title,
-	description = "",
-	isActive = true,
-}: ICampaign): Promise<ICampaign | null> => {
+const create = async (
+	title: string,
+	description: string,
+	isActive?: boolean
+): Promise<ICampaign | null> => {
 	if (!title) {
 		throw new ApiError(400, "Title is required");
 	}
@@ -51,7 +49,7 @@ const create = async ({
 	return article;
 };
 
-const findSingleItem = async (id: string): Promise<ICampaign> => {
+const findSingleItem = async (id: ObjectId): Promise<ICampaign> => {
 	if (!id) throw new ApiError(400, "Id is required");
 
 	const campaign = await Campaign.findById(id);
@@ -84,7 +82,7 @@ const removeItem = async (id: string): Promise<ICampaign | null> => {
 		throw new ApiError(404, "Campaign not found");
 	}
 
-	return Campaign.findByIdAndDelete(id);
+	return await Campaign.findByIdAndDelete(id);
 };
 
 export default {

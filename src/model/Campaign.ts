@@ -1,7 +1,7 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, ObjectId, Schema } from "mongoose";
 
 export type ICampaign = {
-	id?: string;
+	id: ObjectId;
 	title: string;
 	description: string;
 	isActive: boolean;

@@ -1,15 +1,10 @@
 import express from "express";
-import { authController } from "../api/v1/auth/controller";
-import { campaignController } from "../api/v1/campaign/controller";
+import campaignRouter from "./campaign";
+import authRouter from "./auth";
 
 const router = express.Router();
 
-// campaign routes
-router
-	.get("/api/v1/campaigns", campaignController.findAllItems)
-	.post("/api/v1/campaigns", campaignController.create);
-
-// auth routes
-router.post("/api/v1/auth/login", authController.login);
+router.use("/api/v1", authRouter);
+router.use("/api/v1", campaignRouter);
 
 export default router;

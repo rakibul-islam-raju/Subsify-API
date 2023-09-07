@@ -13,8 +13,6 @@ servers:
 tags:
   - name: Campaign
     description: Campaign endpoints
-  - name: Subscription
-    description: Subscription endpoints
   - name: Auth
     description: Auth endpoints
 paths:
@@ -64,82 +62,6 @@ paths:
                       self:
                         type: string
                         example: "/auth/signin"
-        "400":
-          $ref: "#/components/responses/400"
-        "500":
-          "$ref": "#/components/responses/500"
-  "/subscribe":
-    post:
-      operationId: subscribePost
-      tags: [Subscription]
-      description: Subscribe new user
-      requestBody:
-        description: To subscribe user must need to provide valid email
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: john@mail.com
-              required: [email]
-      responses:
-        "201":
-          description: Successfully subscribed
-          content:
-            "application/json":
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 201
-                  message:
-                    type: string
-                    example: "Subscribed successfully"
-                  data:
-                    $ref: "#/components/schemas/Campaign"
-        "400":
-          $ref: "#/components/responses/400"
-        "500":
-          "$ref": "#/components/responses/500"
-  "/unsubscribe":
-    post:
-      operationId: unsubscribePost
-      tags: [Subscription]
-      description: Unsubscribe user
-      requestBody:
-        description: To unsubscribe user must need to provide valid email
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: john@mail.com
-              required: [email]
-      responses:
-        "201":
-          description: Successfully subscribed
-          content:
-            "application/json":
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 201
-                  message:
-                    type: string
-                    example: "Unsubscribed successfully"
-                  data:
-                    $ref: "#/components/schemas/Campaign"
         "400":
           $ref: "#/components/responses/400"
         "500":
@@ -330,6 +252,102 @@ paths:
           $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
+  "/campaigns/{id}/subscribe":
+    post:
+      operationId: subscribePost
+      tags: [Campaign]
+      description: Subscribe to a campaign
+      requestBody:
+        description: To subscribe user must need to provide valid email
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@mail.com
+              required: [email]
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: "Subscribed successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        default: "64d268cdeef8c84bb18912db"
+                      email:
+                        type: string
+                        format: email
+                        default: "john@mail.com"
+                      campaign:
+                        $ref: "#/components/schemas/Campaign"
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            default: "/campaigns/64f756b297e7b2348dc07347/subscribe"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/campaigns/{id}/unsubscribe":
+    post:
+      operationId: unsubscribePost
+      tags: [Campaign]
+      description: Unsubscribe from a campaign
+      requestBody:
+        description: To unsubscribe user must need to provide valid email
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@mail.com
+              required: [email]
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: "Unsubscribed successfully"
+                  data:
+                    $ref: "#/components/schemas/Campaign"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
 components:
   securitySchemes:
     bearerAuth:

@@ -4,19 +4,23 @@ import { catchAsync } from "../../../../utils/catchAsync";
 import campaignService from "../../../../lib/campaign";
 import { sendResponse } from "../../../../utils/sendResponse";
 
-export const create: RequestHandler = catchAsync(
+export const updateItemPatch: RequestHandler = catchAsync(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { title, description, isActive } = req.body;
+		const { campaignId } = req.params;
 
-		const campaign = await campaignService.create(title, description, isActive);
+		const campaign = await campaignService.updateProperties(
+			campaignId,
+			req.body
+		);
+
+		const links = {
+			self: `/campaigns/${campaignId}`,
+		};
 
 		const response = {
-			code: httpStatus.CREATED,
-			message: "Campaign Created Successfully",
+			code: httpStatus.OK,
 			data: campaign,
-			links: {
-				self: `/campaigns/${campaign?.id}`,
-			},
+			links,
 		};
 
 		sendResponse(res, response);
