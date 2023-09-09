@@ -4,11 +4,11 @@ export const pickQueryParams = <
 >(
 	obj: T,
 	keys: K[]
-): Partial<T> => {
-	const finalObject: Partial<T> = {};
+): Record<string, unknown> => {
+	const finalObject: Record<string, unknown> = {};
 
 	for (const key of keys) {
-		const lowerCase = String(key).toLowerCase();
+		const lowerCase: string = String(key).toLowerCase();
 
 		if (obj) {
 			const isKeyExist = Object.keys(obj).find(
@@ -16,7 +16,7 @@ export const pickQueryParams = <
 			);
 
 			if (isKeyExist) {
-				finalObject[key] = obj[key];
+				finalObject[lowerCase] = obj[lowerCase];
 			}
 		}
 	}

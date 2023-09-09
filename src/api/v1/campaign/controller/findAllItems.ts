@@ -27,8 +27,8 @@ export const findAllItems: RequestHandler = catchAsync(
 			query: req.query,
 			hasNext: !!pagination.next,
 			hasPrev: !!pagination.prev,
-			offset: Number(queryParams.offset),
-			limit: Number(queryParams.limit),
+			offset: Number(pagination.offset),
+			limit: Number(pagination.limit),
 		});
 
 		const response = {

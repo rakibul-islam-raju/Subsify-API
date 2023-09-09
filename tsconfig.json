@@ -1,5 +1,11 @@
 {
-	"exclude": ["node_modules"],
+	"exclude": [
+		"node_modules",
+		"./coverage",
+		"./dist",
+		"__tests__",
+		"jest.config.js"
+	],
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 

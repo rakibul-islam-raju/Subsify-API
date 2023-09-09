@@ -26,7 +26,7 @@ export const getPagination = ({
 		offset,
 	};
 
-	if (offset + limit < count) {
+	if (offset + limit > limit) {
 		pagination.next = offset + limit;
 	}
 
@@ -53,25 +53,31 @@ type HATEOASForAllItemsProps = {
 	limit: number;
 };
 
-const getHATEOASForAllItems = ({
+export const getHATEOASForAllItems = ({
 	url = "/",
 	path = "",
 	query = {},
 	hasNext = false,
 	hasPrev = false,
-	offset = 1,
-	limit = 1,
+	offset = config.offset,
+	limit = config.limit,
 }: HATEOASForAllItemsProps) => {
 	const links: ILinks = {
 		self: `${path}?${generateQueryString({ ...query })}`,
 	};
 
 	if (hasNext) {
-		const queryStr = generateQueryString({ ...query, offset: offset + limit });
+		const queryStr = generateQueryString({
+			...query,
+			offset: Number(offset) + Number(limit),
+		});
 		links.next = `${path}?${queryStr}`;
 	}
 	if (hasPrev) {
-		const queryStr = generateQueryString({ ...query, offset: offset - limit });
+		const queryStr = generateQueryString({
+			...query,
+			offset: Number(offset) - Number(limit),
+		});
 		links.prev = `${path}?${queryStr}`;
 	}
 
@@ -95,6 +101,7 @@ export const getTransformedItems = <T>({
 
 		return updatedItems;
 	}
+	return [];
 };
 
 export default {
