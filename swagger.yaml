@@ -177,11 +177,11 @@ paths:
               properties:
                 title:
                   type: string
-                  example: First article
+                  example: First Campaign
                 description:
                   type: string
                   format: text
-                  example: Body of the first article
+                  example: Body of the first campaign
                 isActive:
                   type: boolean
                   example: true
@@ -379,8 +379,8 @@ paths:
       parameters:
         - $ref: "#/components/parameters/idPathParam"
       responses:
-        "201":
-          description: Successfully subscribed
+        "204":
+          description: Unuccessfully subscribed
           content:
             "application/json":
               schema:
@@ -389,12 +389,10 @@ paths:
                   code:
                     type: integer
                     format: int32
-                    example: 201
+                    example: 204
                   message:
                     type: string
                     example: "Unsubscribed successfully"
-                  data:
-                    $ref: "#/components/schemas/Campaign"
         "400":
           $ref: "#/components/responses/400"
         "500":
@@ -571,7 +569,6 @@ components:
       description: Search term
       schema:
         type: string
-        example: title
     idPathParam:
       in: path
       name: id

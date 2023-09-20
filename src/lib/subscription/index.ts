@@ -34,8 +34,8 @@ const subscribe = async (
 };
 
 const unsubscribe = async (
-	campaignId: ObjectId,
-	email: string
+	email: string,
+	campaignId: ObjectId
 ): Promise<ISubscription | null> => {
 	await campaignService.findSingleItem(campaignId);
 

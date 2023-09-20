@@ -11,7 +11,7 @@ export const unsubscribe: RequestHandler = catchAsync(
 		const { campaignId } = req.params;
 
 		const campaignObjectId = campaignId as unknown as ObjectId;
-		await subscribeService.subscribe(email, campaignObjectId);
+		await subscribeService.unsubscribe(email, campaignObjectId);
 
 		const response = {
 			code: httpStatus.NO_CONTENT,
