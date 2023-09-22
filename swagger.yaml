@@ -258,10 +258,6 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                  format: int32
-                  example: 1
                 title:
                   type: string
                   example: Lorem Ipsum
