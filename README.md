@@ -31,13 +31,6 @@ To build the project for production, use the following command:
 - Yarn: `yarn build`
 - NPM: `npm run build`
 
-### Production
-
-To build the project for production, use the following command:
-
-- Yarn: `yarn build`
-- NPM: `npm run build`
-
 ### Start
 
 To start the project in production mode after building, use:
